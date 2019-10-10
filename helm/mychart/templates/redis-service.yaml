@@ -1,19 +1,19 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "mychart.fullname" . }}
+  name: redis
   labels:
-    app.kubernetes.io/name: {{ include "mychart.name" . }}
+    app.kubernetes.io/name: redis
     helm.sh/chart: {{ include "mychart.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.redis.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
+    - port: {{ .Values.redis.service.port }}
       targetPort: http
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: {{ include "mychart.name" . }}
+    app.kubernetes.io/name: redis
     app.kubernetes.io/instance: {{ .Release.Name }}
