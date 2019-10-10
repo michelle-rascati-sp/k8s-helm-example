@@ -1,0 +1,41 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: web
+  namespace: default
+spec:
+  selector:
+    app: web
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: default
+  labels:
+    app: web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: 406205545357.dkr.ecr.us-east-1.amazonaws.com/mrascati/flask-counter:latest
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 5000
+          env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
