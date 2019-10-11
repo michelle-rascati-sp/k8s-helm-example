@@ -1,12 +1,30 @@
 # Kubernetes and Helm
 
-## Kubernetes local setup
+## Kubernetes + helm local setup
 
-TODO
-
-## Helm setup
-
-TODO
+For mac:
+- Install Docker for Desktop if you have not already: https://www.docker.com/products/docker-desktop
+- Set up kubernetes locally:
+In docker for desktop, go to Preferences > Kubernetes > Enable Kubernetes.
+Once you see the green dot and "Kubernetes is running", you can switch contexts to docker-desktop
+- Install kubectl 
+```bash
+brew install kubernetes-cli
+```
+- Switch and confirm you are in your local k8s cluster
+```bash
+kubectl config use-context docker-desktop
+kubectl config current-context
+docker-desktop
+```
+- Install helm
+```bash
+brew install kubernetes-helm
+```
+- Initialize helm for this context
+```bash
+helm init
+```
 
 ## Prerequisites
 - Assumes general knowledge of Docker containers.
@@ -14,11 +32,31 @@ TODO
 
 # Kubernetes
 
+![k8s docker](./k8s-docker.jpeg)
+
+
 ## Terminology
 
-TODO
+![k8s architecture](./k8s-architecture.png)
 
-## Deploy
+- **kubernetes**: Greek for "helmsman"/"captain" - container orchestration for automating deployments, scaling, and management.
+- **node**: worker machine that contains services necessary to run pods managed by master components
+- **cluster**: A group of kubernetes nodes
+- **container**: a light weight version of a virtual machine with an isolated piece of filesystem, cpu, memory, etc...
+- **pod**: group of containerized components. Guaranteed to be co-located on a node and can share resources.
+- **replica set**: grouping mechanism that maintains declared number of instances of a pod
+- **deployment**: higher level mechanism that manages what happens to a replica set (updates, roll backs, etc).
+- **stateful set**: like a deployment, only the state of the pods are preserved if they are restarted or destroyed.
+- **service**: groups pods by labels and load balances traffic to them in round-robin manner.
+- **ingress**: expose http(s) routes from outside the cluster to services within the cluster.
+- **volume**: external/persistent storage that can be mountd onto a pod and shared between pods.
+- **namespace**: used for partitioning and organization of resources (e.g. 'prod' and 'dev' namespaces can live in the same k8s cluster)
+- **config map**: configuration, like environment variables, that can be attached to a pod or set of pods.
+- **secret**: like config maps, but base64 encoded.
+- **manifest files**: kubernetes files (yaml or json) that define your resources
+
+
+## Deploy manifest files
 
 1. Create a deployment for the redis
 ```
@@ -97,9 +135,15 @@ refresh localhost:5000 - the page counts have started back over :( should have s
 
 # Helm
 
+![helm](./helm.png)
+
 ## Terminology
 
-TODO
+- **helm**: (apparatus for steering a ship) - the package manager for kubernetes to configure/deploy.
+- **chart**: package which consists of templated yaml files that can be rendered into k8s manifest files.
+- **values**: parameters that can be used in the chart templates.
+- **release**: specific configuration and deployment of a chart
+- **tiller**: in-cluster component of helm that interacts with the k8s api to manage the k8s resources.
 
 ## Creating a helm chart
 
