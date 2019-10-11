@@ -58,9 +58,11 @@ helm init
 
 ## Deploy manifest files
 
-1. Create a deployment for the redis
+Set up a python flask webserver with a redis backend that keeps track of page views.
+
+1. Create a deployment for redis
 ```
-$ kubectl create -f k8s/redis-deployment.yaml
+$ kubectl apply -f k8s/redis-deployment.yaml
 deployment.apps/redis created
 
 $ kubectl get deployment
@@ -80,7 +82,7 @@ You will see that the deployment has created 1 out of 1 replicas of the redis po
 $ redis-cli ping
 Could not connect to Redis at 127.0.0.1:6379: Connection refused
 
-$ kubectl create -f k8s/redis-svc.yaml 
+$ kubectl apply -f k8s/redis-svc.yaml 
 service/redis created
 
 $ kubectl get svc
@@ -177,13 +179,14 @@ metadata:
 spec:
 ```
 
-Edit to make it look like our k8s objects.
+1. Edit to make it look like our k8s objects.
 
-Create a namespace to keep things separate:
+2. Create a namespace to keep things separate:
 ```
 kubectl create namespace mychart
 ```
 
+3. Deploy the first release of this chart
 ```
 $ helm upgrade mychart mychart --install --namespace mychart --wait
 Release "mychart" does not exist. Installing it now.
@@ -211,13 +214,13 @@ redis-7bf554988d-h896s  1/1    Running  0         4s
 web-56989b5654-fl8sv    1/1    Running  0         4s
 ```
 
-Port forward from this namespace and we can see we are directed to this pod.
+4. Port forward from this namespace and we can see we are directed to this pod.
 ```
 kubectl port-forward -n mychart service/web 5000:5000
 
 ```
 
-Change a value
+5. Change a value
 ```
 helm upgrade mychart mychart --install --namespace mychart --wait --set web.replicaCount=2
 ...
